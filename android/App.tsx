@@ -12,6 +12,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import AudioAnalysisScreen from './src/screens/AudioAnalysisScreen';
 import MedicalPredictionScreen from './src/screens/MedicalPredictionScreen';
 import ReportScreen from './src/screens/ReportScreen';
+import AssistantScreen from './src/screens/AssistantScreen';
 import { colors } from './src/utils/colors';
 
 const Stack = createNativeStackNavigator();
@@ -50,8 +51,14 @@ export default function App() {
             component={ReportScreen}
             options={{ title: 'Final Report', headerLeft: () => null }}
           />
+          <Stack.Screen
+            name="Assistant"
+            component={AssistantScreen}
+            options={{ title: 'Health Assistant' }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
+
