@@ -26,6 +26,12 @@ export default function DashboardScreen({ navigation }: DashboardScreenProps) {
         subtitle="Enter details for risk score & level"
         onPress={() => navigation.navigate('MedicalPrediction', { flow: 'medical' })}
       />
+
+      <CardOption
+        title="🏥 Health Assistant"
+        subtitle="Ask questions & find nearby hospitals"
+        onPress={() => navigation.navigate('Assistant')}
+      />
     </View>
   );
 }
