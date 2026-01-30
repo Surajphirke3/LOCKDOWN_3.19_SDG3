@@ -1,0 +1,136 @@
+############################################
+# GLOBAL .gitignore (World-Class)
+# Author: Best Practices
+############################################
+
+########## OS FILES ##########
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+########## EDITORS & IDE ##########
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+.history/
+*.swp
+*.swo
+*.bak
+
+########## ENV & SECRETS ##########
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.keystore
+secrets/
+credentials/
+config/secrets.*
+
+########## NODE / JS ##########
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.next/
+dist/
+build/
+out/
+.cache/
+coverage/
+
+########## REACT NATIVE / EXPO ##########
+.expo/
+.expo-shared/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+ios/Pods/
+ios/build/
+*.jks
+*.keystore
+
+########## FLUTTER ##########
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-runner
+build/
+android/.gradle/
+ios/Pods/
+ios/.symlinks/
+
+########## PYTHON ##########
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+########## ML / DATA ##########
+data/
+datasets/
+*.h5
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.joblib
+*.pkl
+wandb/
+mlruns/
+
+########## LOGS ##########
+logs/
+*.log
+*.tmp
+*.temp
+
+########## DATABASE ##########
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+
+########## DOCKER ##########
+.dockerignore
+docker-compose.override.yml
+
+########## TEST / REPORTS ##########
+reports/
+test-results/
+allure-results/
+
+########## MISC ##########
+*.orig
+*.rej
+*.bak
+.cache/
+tmp/
+temp/
+commmit.py
