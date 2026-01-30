@@ -7,6 +7,7 @@ import {
   Alert,
   ViewStyle,
   TextStyle,
+  Platform,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import PrimaryButton from '../components/PrimaryButton';
@@ -15,6 +16,46 @@ import { colors } from '../utils/colors';
 
 const RECORD_DURATION_MS = 3000;
 const MAX_ATTEMPTS = 3;
+
+// Recording options
+// iOS: uses WAV (Linear PCM) which backend accepts
+// Android: Try 3GP/AMR format which is simpler and some backends handle better
+const RECORDING_OPTIONS: Audio.RecordingOptions = Platform.OS === 'ios'
+  ? {
+      ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
+      ios: {
+        ...Audio.RecordingOptionsPresets.HIGH_QUALITY.ios,
+        extension: '.wav',
+        outputFormat: Audio.IOSOutputFormat.LINEARPCM,
+        audioQuality: Audio.IOSAudioQuality.HIGH,
+        sampleRate: 44100,
+        numberOfChannels: 1,
+        bitRate: 128000,
+        linearPCMBitDepth: 16,
+        linearPCMIsBigEndian: false,
+        linearPCMIsFloat: false,
+      },
+    }
+  : {
+      // Android: Try 3GP with AMR_NB encoder - simpler format
+      android: {
+        extension: '.3gp',
+        outputFormat: Audio.AndroidOutputFormat.THREE_GPP,
+        audioEncoder: Audio.AndroidAudioEncoder.AMR_NB,
+        sampleRate: 8000,
+        numberOfChannels: 1,
+        bitRate: 12200,
+      },
+      ios: {
+        extension: '.m4a',
+        outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
+        audioQuality: Audio.IOSAudioQuality.HIGH,
+        sampleRate: 44100,
+        numberOfChannels: 1,
+        bitRate: 128000,
+      },
+      web: {},
+    };
 
 interface AudioAnalysisScreenProps {
   navigation: {
@@ -59,9 +100,8 @@ export default function AudioAnalysisScreen({ navigation }: AudioAnalysisScreenP
   const startRecording = useCallback(async () => {
     try {
       setError(null);
-      const { recording: rec } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+      // Use WAV recording options for backend compatibility
+      const { recording: rec } = await Audio.Recording.createAsync(RECORDING_OPTIONS);
       setRecording(rec);
       setIsRecording(true);
     } catch (e: unknown) {
