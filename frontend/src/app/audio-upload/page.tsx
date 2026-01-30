@@ -299,7 +299,7 @@ export default function AudioUploadPage() {
             <div className="mt-4 p-4 bg-gray-50 dark:bg-zinc-800 rounded border">
               <h3 className="font-semibold mb-2">Server Analysis Result:</h3>
               <div className="bg-white dark:bg-zinc-900 p-3 rounded border font-mono text-sm overflow-x-auto">
-                <pre className="whitespace-pre-wrap break-words">
+                <pre className="whitespace-pre-wrap wrap-break-word">
                   {JSON.stringify(serverResponse, null, 2)}
                 </pre>
               </div>
