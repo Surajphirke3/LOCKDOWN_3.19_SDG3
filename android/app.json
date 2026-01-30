@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "CoughLock",
+    "slug": "coughlock",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0f766e",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0f766e"
+      },
+      "package": "com.coughlock.app",
+      "permissions": ["android.permission.RECORD_AUDIO"]
+    },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow CoughLock to record cough audio for TB risk assessment."
+        }
+      ]
+    ]
+  }
+}
