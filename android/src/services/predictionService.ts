@@ -7,10 +7,21 @@
 const MEDICAL_PREDICT_URL = 'https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/api/predict';
 
 export interface MedicalInput {
-  age: number;
-  cough_days: number;
-  fever: boolean;
-  smoker: boolean;
+  Age: number;           // Age in years (e.g., 45)
+  Gender: string;        // "Male" or "Female"
+  Cough: number;         // Number of days with cough
+  Fever: string;         // "Yes" or "No"
+  WeightLoss: number;    // Weight loss in kg
+  NightSweats: string;   // "Yes" or "No"
+  ChestPain: string;     // "Yes" or "No"
+  Hemoptysis: string;    // "Yes" or "No" (coughing blood)
+  Breathlessness: string; // "Mild", "Moderate", or "Severe"
+  ContactHistory: string; // "Yes" or "No" (contact with TB patient)
+  TravelHistory: string;  // "Yes" or "No"
+  HIVStatus: string;     // "Positive" or "Negative"
+  PreviousTB: string;    // "Yes" or "No"
+  ChestXRay: string;     // "Normal" or "Abnormal"
+  SputumTest: string;    // "Positive" or "Negative"
 }
 
 export interface PredictionResult {
@@ -21,13 +32,23 @@ export interface PredictionResult {
 export const predictRisk = async (input: MedicalInput): Promise<PredictionResult> => {
   console.log('[PredictionService] Submitting medical data:', input);
   
-  // Match frontend format EXACTLY (line 37 of cough-prediction/page.tsx)
-  // fever and smoker are sent as strings 'true'/'false'
+  // Since interface is now PascalCase, pass input directly
   const body = {
-    age: input.age,
-    cough_days: input.cough_days,
-    fever: input.fever ? 'true' : 'false',
-    smoker: input.smoker ? 'true' : 'false',
+    Age: input.Age,
+    Gender: input.Gender,
+    Cough: input.Cough,
+    Fever: input.Fever,
+    WeightLoss: Math.round(input.WeightLoss),
+    NightSweats: input.NightSweats,
+    ChestPain: input.ChestPain,
+    Hemoptysis: input.Hemoptysis,
+    Breathlessness: input.Breathlessness,
+    ContactHistory: input.ContactHistory,
+    TravelHistory: input.TravelHistory,
+    HIVStatus: input.HIVStatus,
+    PreviousTB: input.PreviousTB,
+    ChestXRay: input.ChestXRay,
+    SputumTest: input.SputumTest,
   };
 
   console.log('[PredictionService] Request body:', JSON.stringify(body));
