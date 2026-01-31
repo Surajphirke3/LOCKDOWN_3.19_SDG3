@@ -440,8 +440,8 @@ Backend endpoints are currently hardcoded in service files:
 | Service | URL |
 |---------|-----|
 | Audio WebSocket | `wss://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/ws/audio` |
-| Prediction API | `https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/api/predict` |
-| Assistant API | `https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/assistant` |
+| Prediction API | `https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/api/predict` |
+| Assistant API | `https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/assistant` |
 
 **To change**: Update URLs in `src/services/*.ts` files.
 
