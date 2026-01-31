@@ -4,7 +4,7 @@
  * Payload: { risk_level, user_location, user_query }
  */
 
-const ASSISTANT_URL = 'https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/assistant';
+const ASSISTANT_URL = 'https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/assistant';
 
 export interface AssistantInput {
   risk_level: 'LOW' | 'MEDIUM' | 'HIGH' | string;
