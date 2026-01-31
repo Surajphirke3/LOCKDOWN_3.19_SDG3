@@ -13,10 +13,21 @@ interface ReportScreenProps {
         spectrogram_shape: number[];
       };
       medical?: {
-        age: number;
-        cough_days: number;
-        fever: boolean;
-        smoker: boolean;
+        Age: number;
+        Gender: string;
+        Cough: number;
+        Fever: string;           // "Yes" or "No"
+        WeightLoss: number;
+        NightSweats: string;     // "Yes" or "No"
+        ChestPain: string;       // "Yes" or "No"
+        Hemoptysis: string;      // "Yes" or "No"
+        Breathlessness: string;  // "Mild", "Moderate", or "Severe"
+        ContactHistory: string;  // "Yes" or "No"
+        TravelHistory: string;   // "Yes" or "No"
+        HIVStatus: string;       // "Positive" or "Negative"
+        PreviousTB: string;      // "Yes" or "No"
+        ChestXRay: string;       // "Normal" or "Abnormal"
+        SputumTest: string;      // "Positive" or "Negative"
       };
       riskResult?: {
         risk_score: number;
@@ -32,6 +43,7 @@ interface ReportScreenProps {
 export default function ReportScreen({ route, navigation }: ReportScreenProps) {
   const { flow, audioResult, medical, riskResult } = route.params || {};
   const isAudio = flow === 'audio';
+  const isVideo = flow === 'video';
   const isMedical = flow === 'medical';
 
   const confidence = audioResult?.confidence ?? 0;
@@ -39,10 +51,6 @@ export default function ReportScreen({ route, navigation }: ReportScreenProps) {
   const shape = audioResult?.spectrogram_shape ?? [128, 131];
   const riskScore = riskResult?.risk_score ?? 0;
   const riskLevel = riskResult?.risk_level ?? '—';
-  const age = medical?.age ?? '—';
-  const coughDays = medical?.cough_days ?? '—';
-  const fever = medical?.fever ?? false;
-  const smoker = medical?.smoker ?? false;
 
   const getLevelColor = (level: string) => {
     const l = (level || '').toUpperCase();
@@ -58,18 +66,29 @@ export default function ReportScreen({ route, navigation }: ReportScreenProps) {
     });
   };
 
+  const renderMedicalRow = (label: string, value: string | number) => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.rowLabel}>{label}</Text>
+        <Text style={styles.rowValue}>{String(value)}</Text>
+      </View>
+    );
+  };
+
+
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.section}>Selected Flow</Text>
       <View style={styles.flowCard}>
         <Text style={styles.flowLabel}>
-          {isAudio ? 'Cough Audio Analysis' : isMedical ? 'Medical Risk Prediction' : flow || '—'}
+          {isAudio ? 'Cough Audio Analysis' : isVideo ? 'Cough Video Analysis' : isMedical ? 'Medical Risk Prediction' : flow || '—'}
         </Text>
       </View>
 
-      {isAudio && audioResult && (
+      {(isAudio || isVideo) && audioResult && (
         <>
-          <Text style={styles.section}>Audio Analysis</Text>
+          <Text style={styles.section}>{isVideo ? 'Video Analysis' : 'Audio Analysis'}</Text>
           <View style={styles.card}>
             <Text style={styles.rowLabel}>Risk Label</Text>
             <Text style={styles.rowValue}>{label}</Text>
@@ -87,23 +106,32 @@ export default function ReportScreen({ route, navigation }: ReportScreenProps) {
 
       {isMedical && medical && (
         <>
-          <Text style={styles.section}>Medical Inputs</Text>
-          <View style={styles.card}>
-            <Text style={styles.rowLabel}>Age</Text>
-            <Text style={styles.rowValue}>{age}</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.rowLabel}>Cough (days)</Text>
-            <Text style={styles.rowValue}>{coughDays}</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.rowLabel}>Fever</Text>
-            <Text style={styles.rowValue}>{fever ? 'Yes' : 'No'}</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.rowLabel}>Smoker</Text>
-            <Text style={styles.rowValue}>{smoker ? 'Yes' : 'No'}</Text>
-          </View>
+          {/* Basic Information */}
+          <Text style={styles.section}>Basic Information</Text>
+          {renderMedicalRow('Age', medical.Age ?? '—')}
+          {renderMedicalRow('Gender', medical.Gender ?? '—')}
+
+          {/* Symptoms */}
+          <Text style={styles.section}>Symptoms</Text>
+          {renderMedicalRow('Cough (days)', medical.Cough ?? '—')}
+          {renderMedicalRow('Fever', medical.Fever ?? 'No')}
+          {renderMedicalRow('Weight Loss (kg)', medical.WeightLoss ?? 0)}
+          {renderMedicalRow('Night Sweats', medical.NightSweats ?? 'No')}
+          {renderMedicalRow('Chest Pain', medical.ChestPain ?? 'No')}
+          {renderMedicalRow('Hemoptysis', medical.Hemoptysis ?? 'No')}
+          {renderMedicalRow('Breathlessness', medical.Breathlessness ?? 'Mild')}
+
+          {/* Medical History */}
+          <Text style={styles.section}>Medical History</Text>
+          {renderMedicalRow('TB Contact History', medical.ContactHistory ?? 'No')}
+          {renderMedicalRow('Travel History', medical.TravelHistory ?? 'No')}
+          {renderMedicalRow('HIV Status', medical.HIVStatus ?? '—')}
+          {renderMedicalRow('Previous TB', medical.PreviousTB ?? 'No')}
+
+          {/* Test Results */}
+          <Text style={styles.section}>Test Results</Text>
+          {renderMedicalRow('Chest X-Ray', medical.ChestXRay ?? '—')}
+          {renderMedicalRow('Sputum Test', medical.SputumTest ?? '—')}
         </>
       )}
 
@@ -123,9 +151,9 @@ export default function ReportScreen({ route, navigation }: ReportScreenProps) {
         </>
       )}
 
-      {isAudio && !riskResult && (
+      {(isAudio || isVideo) && !riskResult && (
         <>
-          <Text style={styles.section}>Final Risk (from Audio)</Text>
+          <Text style={styles.section}>Final Risk (from {isVideo ? 'Video' : 'Audio'})</Text>
           <View style={styles.finalCard}>
             <Text style={styles.rowLabel}>Risk Label</Text>
             <Text style={[styles.finalLevel, { color: colors.primary }]}>{label}</Text>
