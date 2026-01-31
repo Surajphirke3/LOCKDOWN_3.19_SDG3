@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-const ASSISTANT_URL = 'https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/assistant';
+const ASSISTANT_URL = 'https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/assistant';
 
 type Hospital = {
     name: string;
