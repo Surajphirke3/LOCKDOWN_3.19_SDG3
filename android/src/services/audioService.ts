@@ -80,7 +80,7 @@ function isValidAudioFormat(data: ArrayBuffer): boolean {
   return false;
 }
 
-export const analyzeAudio = async (audioUri: string): Promise<AudioAnalysisResult> => {
+export const analyzeAudio = async (audioUri: string, isVideo = false): Promise<AudioAnalysisResult> => {
   console.log('[AudioService] Starting audio analysis for URI:', audioUri);
   
   // Read the audio file
@@ -110,8 +110,8 @@ export const analyzeAudio = async (audioUri: string): Promise<AudioAnalysisResul
   
   // Android records in 3GP format which backend doesn't support
   // We need to convert it to WAV
-  if (isAndroid && (uriExt === '3gp' || uriExt === 'amr')) {
-    console.log('[AudioService] ⚠️ Android 3GP/AMR detected - backend only supports MP3/WAV');
+  if (isAndroid && (uriExt === '3gp' || uriExt === 'amr') && !isVideo) {
+    console.log('[AudioService] ⚠️ Android 3GP/AMR audio detected - backend only supports MP3/WAV');
     console.log('[AudioService] Converting to WAV format...');
     
     // For now, wrap the 3GP data in a WAV container
@@ -164,9 +164,27 @@ export const analyzeAudio = async (audioUri: string): Promise<AudioAnalysisResul
     filename = 'cough.wav';
     mimeType = 'audio/wav';
     console.log('[AudioService] WAV file');
-  } else if (uriExt === 'm4a' || uriExt === 'mp4') {
+  } else if (uriExt === 'mp4') {
+    // MP4 Video or Audio
+    finalData = audioData;
+    filename = 'cough_video.mp4';
+    mimeType = 'video/mp4'; 
+    console.log('[AudioService] MP4 file detected - sending as video/mp4');
+  } else if (uriExt === 'mov') {
+    // MOV Video (iOS)
+    finalData = audioData;
+    filename = 'cough_video.mov';
+    mimeType = 'video/quicktime';
+    console.log('[AudioService] MOV file detected - sending as video/quicktime');
+  } else if (uriExt === '3gp' && isVideo) {
+    // 3GP Video
+    finalData = audioData;
+    filename = 'cough_video.3gp';
+    mimeType = 'video/3gpp';
+    console.log('[AudioService] 3GP video detected');
+  } else if (uriExt === 'm4a') {
     // M4A/MP4 audio - backend doesn't support this, convert to WAV
-    console.log('[AudioService] M4A/MP4 detected - backend only supports MP3/WAV');
+    console.log('[AudioService] M4A detected - backend only supports MP3/WAV');
     const wavHeader = createWavHeader(audioData.byteLength);
     const wavData = new Uint8Array(wavHeader.byteLength + audioData.byteLength);
     wavData.set(new Uint8Array(wavHeader), 0);
