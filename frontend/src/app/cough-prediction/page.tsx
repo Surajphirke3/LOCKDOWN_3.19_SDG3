@@ -50,7 +50,7 @@ const CoughPredictionPage = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/api/predict', {
+            const response = await fetch('https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/api/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
