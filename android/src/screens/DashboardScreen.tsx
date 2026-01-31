@@ -16,9 +16,9 @@ export default function DashboardScreen({ navigation }: DashboardScreenProps) {
       <Text style={styles.tagline}>Lock TB early. Act faster.</Text>
 
       <CardOption
-        title="Cough Audio Analysis"
-        subtitle="Record cough, get risk label & confidence"
-        onPress={() => navigation.navigate('AudioAnalysis', { flow: 'audio' })}
+        title="Cough Video Analysis"
+        subtitle="Record video cough samples for analysis"
+        onPress={() => navigation.navigate('VideoAnalysis', { flow: 'video' })}
       />
 
       <CardOption
