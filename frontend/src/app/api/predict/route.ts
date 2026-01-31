@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.text();
 
-    const upstreamResponse = await fetch('https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/api/predict', {
+    const upstreamResponse = await fetch('https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/api/predict', {
       method: 'POST',
       headers: {
         'Content-Type': request.headers.get('content-type') ?? 'application/json',
