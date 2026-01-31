@@ -4,13 +4,13 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Switch,
   ScrollView,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ViewStyle,
   TextStyle,
+  TouchableOpacity,
 } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton';
 import { predictRisk, MedicalInput, PredictionResult } from '../services/predictionService';
@@ -29,10 +29,30 @@ interface MedicalPredictionScreenProps {
 
 export default function MedicalPredictionScreen({ route, navigation }: MedicalPredictionScreenProps) {
   const { flow } = route.params || {};
+  
+  // Basic Info
   const [age, setAge] = useState('');
+  const [gender, setGender] = useState<'Male' | 'Female'>('Male');
+  
+  // Symptoms - all strings "Yes" or "No"
   const [coughDays, setCoughDays] = useState('');
-  const [fever, setFever] = useState(false);
-  const [smoker, setSmoker] = useState(false);
+  const [fever, setFever] = useState<'Yes' | 'No'>('No');
+  const [weightLoss, setWeightLoss] = useState('');
+  const [nightSweats, setNightSweats] = useState<'Yes' | 'No'>('No');
+  const [chestPain, setChestPain] = useState<'Yes' | 'No'>('No');
+  const [hemoptysis, setHemoptysis] = useState<'Yes' | 'No'>('No');
+  const [breathlessness, setBreathlessness] = useState<'Mild' | 'Moderate' | 'Severe'>('Mild');
+  
+  // History - all strings "Yes" or "No"
+  const [contactHistory, setContactHistory] = useState<'Yes' | 'No'>('No');
+  const [travelHistory, setTravelHistory] = useState<'Yes' | 'No'>('No');
+  const [hivStatus, setHivStatus] = useState<'Positive' | 'Negative'>('Negative');
+  const [previousTB, setPreviousTB] = useState<'Yes' | 'No'>('No');
+  
+  // Test Results
+  const [chestXRay, setChestXRay] = useState<'Normal' | 'Abnormal'>('Normal');
+  const [sputumTest, setSputumTest] = useState<'Positive' | 'Negative'>('Negative');
+  
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PredictionResult | null>(null);
@@ -40,6 +60,8 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
   const submit = async () => {
     const ageNum = parseInt(age, 10);
     const coughNum = parseInt(coughDays, 10);
+    const weightLossNum = parseFloat(weightLoss) || 0;
+    
     if (isNaN(ageNum) || ageNum < 0 || ageNum > 120) {
       setError('Please enter a valid age (0–120).');
       return;
@@ -53,10 +75,21 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
     
     try {
       const input: MedicalInput = {
-        age: ageNum,
-        cough_days: coughNum,
-        fever,
-        smoker,
+        Age: ageNum,
+        Gender: gender,
+        Cough: coughNum,
+        Fever: fever,
+        WeightLoss: weightLossNum,
+        NightSweats: nightSweats,
+        ChestPain: chestPain,
+        Hemoptysis: hemoptysis,
+        Breathlessness: breathlessness,
+        ContactHistory: contactHistory,
+        TravelHistory: travelHistory,
+        HIVStatus: hivStatus,
+        PreviousTB: previousTB,
+        ChestXRay: chestXRay,
+        SputumTest: sputumTest,
       };
       const data = await predictRisk(input);
       setResult(data);
@@ -72,10 +105,21 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
       navigation.navigate('Report', {
         flow: flow || 'medical',
         medical: {
-          age: parseInt(age, 10),
-          cough_days: parseInt(coughDays, 10),
-          fever,
-          smoker,
+          Age: parseInt(age, 10),
+          Gender: gender,
+          Cough: parseInt(coughDays, 10),
+          Fever: fever,
+          WeightLoss: parseFloat(weightLoss) || 0,
+          NightSweats: nightSweats,
+          ChestPain: chestPain,
+          Hemoptysis: hemoptysis,
+          Breathlessness: breathlessness,
+          ContactHistory: contactHistory,
+          TravelHistory: travelHistory,
+          HIVStatus: hivStatus,
+          PreviousTB: previousTB,
+          ChestXRay: chestXRay,
+          SputumTest: sputumTest,
         },
         riskResult: result,
       });
@@ -89,6 +133,38 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
     return colors.success;
   };
 
+  const renderToggleButton = (
+    label: string,
+    options: string[],
+    value: string,
+    onSelect: (val: any) => void
+  ) => (
+    <View style={styles.toggleContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.toggleRow}>
+        {options.map((option) => (
+          <TouchableOpacity
+            key={option}
+            style={[
+              styles.toggleButton,
+              value === option && styles.toggleButtonActive,
+            ]}
+            onPress={() => onSelect(option)}
+          >
+            <Text
+              style={[
+                styles.toggleText,
+                value === option && styles.toggleTextActive,
+              ]}
+            >
+              {option}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -100,17 +176,25 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
       >
         {!result ? (
           <>
+            {/* Basic Info Section */}
+            <Text style={styles.sectionHeader}>Basic Information</Text>
+            
             <View style={styles.field}>
               <Text style={styles.label}>Age</Text>
               <TextInput
                 style={styles.input}
                 value={age}
                 onChangeText={setAge}
-                placeholder="e.g. 35"
+                placeholder="e.g. 45"
                 keyboardType="number-pad"
                 maxLength={3}
               />
             </View>
+            
+            {renderToggleButton('Gender', ['Male', 'Female'], gender, setGender)}
+            
+            {/* Symptoms Section */}
+            <Text style={styles.sectionHeader}>Symptoms</Text>
             
             <View style={styles.field}>
               <Text style={styles.label}>Cough (days)</Text>
@@ -118,31 +202,44 @@ export default function MedicalPredictionScreen({ route, navigation }: MedicalPr
                 style={styles.input}
                 value={coughDays}
                 onChangeText={setCoughDays}
-                placeholder="e.g. 7"
+                placeholder="e.g. 14"
                 keyboardType="number-pad"
                 maxLength={4}
               />
             </View>
             
-            <View style={styles.row}>
-              <Text style={styles.label}>Fever</Text>
-              <Switch
-                value={fever}
-                onValueChange={setFever}
-                trackColor={{ false: colors.switchTrackOff, true: colors.primary }}
-                thumbColor={colors.white}
+            {renderToggleButton('Fever', ['Yes', 'No'], fever, setFever)}
+            
+            <View style={styles.field}>
+              <Text style={styles.label}>Weight Loss (kg)</Text>
+              <TextInput
+                style={styles.input}
+                value={weightLoss}
+                onChangeText={setWeightLoss}
+                placeholder="e.g. 5"
+                keyboardType="decimal-pad"
+                maxLength={5}
               />
             </View>
             
-            <View style={styles.row}>
-              <Text style={styles.label}>Smoker</Text>
-              <Switch
-                value={smoker}
-                onValueChange={setSmoker}
-                trackColor={{ false: colors.switchTrackOff, true: colors.primary }}
-                thumbColor={colors.white}
-              />
-            </View>
+            {renderToggleButton('Night Sweats', ['Yes', 'No'], nightSweats, setNightSweats)}
+            {renderToggleButton('Chest Pain', ['Yes', 'No'], chestPain, setChestPain)}
+            {renderToggleButton('Hemoptysis (Coughing Blood)', ['Yes', 'No'], hemoptysis, setHemoptysis)}
+            {renderToggleButton('Breathlessness', ['Mild', 'Moderate', 'Severe'], breathlessness, setBreathlessness)}
+            
+            {/* History Section */}
+            <Text style={styles.sectionHeader}>Medical History</Text>
+            
+            {renderToggleButton('TB Contact History', ['Yes', 'No'], contactHistory, setContactHistory)}
+            {renderToggleButton('Travel History', ['Yes', 'No'], travelHistory, setTravelHistory)}
+            {renderToggleButton('HIV Status', ['Positive', 'Negative'], hivStatus, setHivStatus)}
+            {renderToggleButton('Previous TB', ['Yes', 'No'], previousTB, setPreviousTB)}
+            
+            {/* Test Results Section */}
+            <Text style={styles.sectionHeader}>Test Results</Text>
+            
+            {renderToggleButton('Chest X-Ray', ['Normal', 'Abnormal'], chestXRay, setChestXRay)}
+            {renderToggleButton('Sputum Test', ['Positive', 'Negative'], sputumTest, setSputumTest)}
             
             {error ? <Text style={styles.error}>{error}</Text> : null}
             
@@ -194,6 +291,16 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 48,
   } as ViewStyle,
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.primary,
+    marginTop: 20,
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.primary,
+  } as TextStyle,
   field: {
     marginBottom: 20,
   } as ViewStyle,
@@ -218,6 +325,35 @@ const styles = StyleSheet.create({
     padding: 14,
     fontSize: 16,
   } as ViewStyle,
+  toggleContainer: {
+    marginBottom: 20,
+  } as ViewStyle,
+  toggleRow: {
+    flexDirection: 'row',
+    gap: 12,
+  } as ViewStyle,
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+  } as ViewStyle,
+  toggleButtonActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  } as ViewStyle,
+  toggleText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.textSecondary,
+  } as TextStyle,
+  toggleTextActive: {
+    color: colors.white,
+  } as TextStyle,
   error: {
     color: colors.error,
     marginBottom: 16,
@@ -226,7 +362,8 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   } as ViewStyle,
   submitButton: {
-    marginTop: 16,
+    marginTop: 24,
+    marginBottom: 40,
   } as ViewStyle,
   resultContainer: {
     marginTop: 8,
