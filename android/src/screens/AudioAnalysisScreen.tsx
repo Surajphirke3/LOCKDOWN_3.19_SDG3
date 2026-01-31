@@ -39,12 +39,12 @@ const RECORDING_OPTIONS: Audio.RecordingOptions = Platform.OS === 'ios'
   : {
       // Android: Try 3GP with AMR_NB encoder - simpler format
       android: {
-        extension: '.3gp',
-        outputFormat: Audio.AndroidOutputFormat.THREE_GPP,
-        audioEncoder: Audio.AndroidAudioEncoder.AMR_NB,
-        sampleRate: 8000,
+        extension: '.m4a',
+        outputFormat: Audio.AndroidOutputFormat.MPEG_4,
+        audioEncoder: Audio.AndroidAudioEncoder.AAC,
+        sampleRate: 44100,
         numberOfChannels: 1,
-        bitRate: 12200,
+        bitRate: 128000,
       },
       ios: {
         extension: '.m4a',
@@ -158,7 +158,7 @@ export default function AudioAnalysisScreen({ navigation }: AudioAnalysisScreenP
         audioResult: result,
       });
     }
-  };
+  }; 
 
   const canSubmit = uris.length > 0 && !uploading && !result;
   const allDone = attempt >= MAX_ATTEMPTS;
