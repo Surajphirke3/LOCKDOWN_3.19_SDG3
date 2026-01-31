@@ -13,6 +13,7 @@ import AudioAnalysisScreen from './src/screens/AudioAnalysisScreen';
 import MedicalPredictionScreen from './src/screens/MedicalPredictionScreen';
 import ReportScreen from './src/screens/ReportScreen';
 import AssistantScreen from './src/screens/AssistantScreen';
+import VideoAnalysisScreen from './src/screens/VideoAnalysisScreen';
 import { colors } from './src/utils/colors';
 
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,11 @@ export default function App() {
             name="Dashboard"
             component={DashboardScreen}
             options={{ title: 'CoughLock' }}
+          />
+          <Stack.Screen
+            name="VideoAnalysis"
+            component={VideoAnalysisScreen}
+            options={{ title: 'Cough Video Analysis' }}
           />
           <Stack.Screen
             name="AudioAnalysis"
