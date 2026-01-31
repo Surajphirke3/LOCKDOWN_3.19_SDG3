@@ -4,7 +4,7 @@
  */
 
 // Exact URL from frontend cough-prediction page
-const MEDICAL_PREDICT_URL = 'https://sturdy-yodel-5gqvgrr7rg77c6r9-8000.app.github.dev/api/predict';
+const MEDICAL_PREDICT_URL = 'https://reimagined-space-sniffle-pjvp5g7rpqjjhr9ww-8000.app.github.dev/api/predict';
 
 export interface MedicalInput {
   Age: number;           // Age in years (e.g., 45)
